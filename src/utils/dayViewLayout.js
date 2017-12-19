@@ -238,12 +238,15 @@ export default function getStyledEvents ({
       let xAdjustment = width * (nbrOfColumns > 1 ? OVERLAP_MULTIPLIER : 0)
       let { top, height } = getYStyles(eventIdx, helperArgs)
 
+      //FIXME horizontal argument
+
       styledEvents[eventIdx] = {
         event: events[eventIdx],
         style: {
-          top,
-          height,
-          width: width + xAdjustment,
+          top: 0,
+          left: top,
+          width: height,
+          height: width + xAdjustment,
           xOffset: (width * siblingIdx) - xAdjustment
         }
       }
@@ -273,6 +276,7 @@ export default function getStyledEvents ({
           event: events[eventIdx],
           style: {
             top,
+            left: 20,
             height,
             width: width + xAdjustment,
             xOffset: spaceOccupiedByParent + (width * i) - xAdjustment

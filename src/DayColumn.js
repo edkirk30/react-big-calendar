@@ -218,17 +218,17 @@ class DayColumn extends React.Component {
           _isSelected
         )
 
-      let { height, top, width, xOffset } = style
+      let { height, top, left, width, xOffset } = style
 
       return (
         <EventWrapper event={event} key={'evt_' + idx}>
           <div
             style={{
-              ...xStyle,
               top: `${top}%`,
               height: `${height}%`,
-              [isRtl ? 'right' : 'left']: `${Math.max(0, xOffset)}%`,
+              [isRtl ? 'right' : 'left']: `${Math.max(left, xOffset)}%`,
               width: `${width}%`,
+              ...xStyle,
             }}
             title={(typeof label === 'string' ? label + ': ' : '') + title}
             onClick={e => this._select(event, e)}

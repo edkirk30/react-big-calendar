@@ -404,7 +404,12 @@ export default class TimeGrid extends Component {
     }
   }
 
+
+  //FIXME horiz argument
   positionTimeIndicator() {
+
+let horizontal = true;
+
     const { rtl, min, max } = this.props
     const now = new Date();
 
@@ -416,13 +421,22 @@ export default class TimeGrid extends Component {
     const timeGutter = this._gutters[this._gutters.length - 1];
 
     if (timeGutter && now >= min && now <= max) {
+
       const pixelHeight = timeGutter.offsetHeight;
       const offset = Math.floor(factor * pixelHeight);
 
+      if (horizontal) {
+
+        timeIndicator.style.left = (factor * 100) + '%';
+
+      }
+      else {
+        timeIndicator.style[rtl ? 'left' : 'right'] = 0;
+        timeIndicator.style[rtl ? 'right' : 'left'] = timeGutter.offsetWidth + 'px';
+        timeIndicator.style.top = offset + 'px';
+      }
+
       timeIndicator.style.display = 'block';
-      timeIndicator.style[rtl ? 'left' : 'right'] = 0;
-      timeIndicator.style[rtl ? 'right' : 'left'] = timeGutter.offsetWidth + 'px';
-      timeIndicator.style.top = offset + 'px';
     } else {
       timeIndicator.style.display = 'none';
     }
