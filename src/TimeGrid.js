@@ -155,7 +155,6 @@ export default class TimeGrid extends Component {
 
     let start = range[0]
       , end = range[range.length - 1]
-
     this.slots = range.length;
 
     let allDayEvents = []
@@ -197,7 +196,7 @@ export default class TimeGrid extends Component {
 
         {this.renderHeader(range, allDayEvents, width)}
 
-        <div ref='content' className='rbc-time-content' style={timeStyle}>
+        <div ref='content' className='rbc-time-content test' style={timeStyle}>
           {currentTimeIndicator}
 
           <TimeColumn
@@ -219,12 +218,20 @@ export default class TimeGrid extends Component {
     let { min, max, endAccessor, startAccessor, components } = this.props;
 
     return range.map((date, idx) => {
-      let daysEvents = events.filter(
+      let daysEvents = events;
+       
+       /*
+        events.filter(
+
+//FIXME support day view with 2 views
+        
+
+
         event => dates.inRange(date,
           get(event, startAccessor),
           get(event, endAccessor), 'day')
       )
-
+*/
       return (
         <DayColumn
           {...this.props }
@@ -431,7 +438,11 @@ let horizontal = true;
     const secondsPassed = dates.diff(now, min, 'seconds');
 
     const timeIndicator = this.refs.timeIndicator;
-    const factor = secondsPassed / secondsGrid;
+
+//FIXME day needs this split in 2
+//    const factor = secondsPassed / secondsGrid;
+const factor = (secondsPassed / secondsGrid)/2;
+    
     const timeGutter = this._gutters[this._gutters.length - 1];
 
     if (timeGutter && now >= min && now <= max) {

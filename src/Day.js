@@ -13,9 +13,11 @@ class Day extends React.Component {
 
   render() {
     let { date, ...props } = this.props;
+    let nextDate = dates.add(date, 1, 'day');
+    let range = [dates.startOf(date, 'day'), dates.startOf(nextDate, 'day')];
 
     return (
-      <TimeGrid {...props} range={[dates.startOf(date, 'day')]} eventOffset={10} />
+      <TimeGrid {...props} range={range} eventOffset={11} />
     );
   }
 }
