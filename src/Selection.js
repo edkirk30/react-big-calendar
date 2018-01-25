@@ -38,10 +38,13 @@ const clickInterval = 250;
 
 class Selection {
 
-  constructor(node, { global = false, longPressThreshold = 250 } = {}) {
+  constructor(node, { global = false, 
+                      longPressThreshold = 250,
+                      horizontal = false } = {}) {
     this.container = node;
     this.globalMouse = !node || global;
     this.longPressThreshold = longPressThreshold;
+    this.horizontal = horizontal;
 
     this._listeners = Object.create(null);
 

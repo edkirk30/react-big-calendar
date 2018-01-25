@@ -3,6 +3,8 @@ import React, { Component } from 'react';
 import cn from 'classnames';
 import { findDOMNode } from 'react-dom';
 
+import moment from 'moment';
+
 import dates from './utils/dates';
 import localizer from './localizer'
 import DayColumn from './DayColumn';
@@ -178,13 +180,25 @@ export default class TimeGrid extends Component {
 
     let gutterRef = ref => this._gutters[1] = ref && findDOMNode(ref);
 
+//FIXME if current day set left so current time in the middle
+    //If not current day, no styling
+
+    let date = range[0];
+    //let timeStyle = {};
+    let timeStyle = {left: (-dates.currentTimeOffset(date)) + '%'};
+
+    let currentTimeIndicator = <div ref='timeIndicator' />;
+    if (dates.isToday(date)) {
+      currentTimeIndicator = <div ref='timeIndicator' className='rbc-current-time-indicator' />
+    }
+
     return (
       <div className='rbc-time-view'>
 
         {this.renderHeader(range, allDayEvents, width)}
 
-        <div ref='content' className='rbc-time-content'>
-          <div ref='timeIndicator' className='rbc-current-time-indicator' />
+        <div ref='content' className='rbc-time-content' style={timeStyle}>
+          {currentTimeIndicator}
 
           <TimeColumn
             {...this.props}

@@ -234,24 +234,47 @@ export default function getStyledEvents ({
 
     // Set styles to top level events.
     [idx, ...siblings].forEach((eventIdx, siblingIdx) => {
-      let width = 100 / nbrOfColumns
-      let xAdjustment = width * (nbrOfColumns > 1 ? OVERLAP_MULTIPLIER : 0)
       let { top, height } = getYStyles(eventIdx, helperArgs)
+      //let yAdjustment = height * (nbrOfColumns > 1 ? OVERLAP_MULTIPLIER : 0)
+      let left = top;
+      top = 0;
+      let width = height;
+      height = 80 / events[eventIdx].maxChildDepth
+      let yAdjustment = height * (events[eventIdx].depth - 1)
+
+      //Booking size classes
+      let className = "";
+      className += 'event-height-' + events[eventIdx].depth + ' ';
+      if (events[eventIdx].depth < 2) {
+        className += 'top-event ';
+      }
+      if (events[eventIdx].maxChildDepth > 1) {
+        className += 'short-event ';
+      } 
+      if (width < 8) {
+        className += 'skinny-event ';
+      }
+    
+      //Booking status classes
+      className += 'status-' + events[eventIdx].workOrderStatus + ' ';
 
       //FIXME horizontal argument
 
       styledEvents[eventIdx] = {
         event: events[eventIdx],
         style: {
-          top: 0,
-          left: top,
-          width: height,
-          height: width + xAdjustment,
-          xOffset: (width * siblingIdx) - xAdjustment
+          top: top + yAdjustment,
+          left: left,
+          width: width,
+          height: height,
+  //        yOffset: (height * siblingIdx) - yAdjustment,
+          xOffset: 0,
+          className
         }
       }
     })
 
+/*
     childGroups.forEach(group => {
       let parentIdx = idx
       let siblingIdx = 0
@@ -268,10 +291,13 @@ export default function getStyledEvents ({
         let { style: parentStyle } = styledEvents[parentIdx]
         let spaceOccupiedByParent = parentStyle.width + parentStyle.xOffset
         let columns = Math.min(group.length, nbrOfColumns)
-        let width = (100 - spaceOccupiedByParent) / columns
-        let xAdjustment = spaceOccupiedByParent * OVERLAP_MULTIPLIER
+        let yAdjustment = spaceOccupiedByParent * OVERLAP_MULTIPLIER
         let { top, height } = getYStyles(eventIdx, helperArgs)
-
+        let left = top;
+        top = 0;
+        let width = height;
+        height = (100 - spaceOccupiedByParent) / columns
+  vert
         styledEvents[eventIdx] = {
           event: events[eventIdx],
           style: {
@@ -282,13 +308,26 @@ export default function getStyledEvents ({
             xOffset: spaceOccupiedByParent + (width * i) - xAdjustment
           }
         }
+        styledEvents[eventIdx] = {
+          event: events[eventIdx],
+          style: {
+            top: top + yAdjustment,
+            left,
+            width,
+            height: height + yAdjustment,
+            yOffset: spaceOccupiedByParent + (height * i) - yAdjustment,
+            xOffset: 0
+          }
+        }
+
       })
     })
-
+*/
     // Move past all events we just went through
-    idx += 1 + siblings.length + childGroups.reduce(
-      (total, group) => total + group.length, 0
-    )
+    //idx += 1 + siblings.length + childGroups.reduce(
+    //  (total, group) => total + group.length, 0
+    //)
+    idx += 1
   }
 
   return styledEvents

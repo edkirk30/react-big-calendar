@@ -2,6 +2,8 @@
 import dateMath from 'date-arithmetic';
 import localizer from '../localizer';
 
+import moment from 'moment';
+
 const MILLI = {
   seconds: 1000,
   minutes: 1000 * 60,
@@ -14,6 +16,26 @@ const MONTHS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
 let dates = {
 
   ...dateMath,
+
+  currentTimeOffset(date) {
+
+    date = new Date(date.toDateString());
+
+    let currentTime = moment();
+
+    let minutesPerPercentage = 14.4;
+    let minutesStart = 120;
+
+    if (dates.isToday(date)) {
+
+      let minutes = moment.duration((currentTime - moment(date))).asMinutes();
+
+      if (minutes > minutesStart) {
+        return ((minutes - minutesStart)/minutesPerPercentage);
+      }
+    }
+    return 0;
+  },
 
   monthsInYear(year){
     let date = new Date(year, 0, 1)

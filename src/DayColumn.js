@@ -77,6 +77,14 @@ class DayColumn extends React.Component {
 
   state = { selecting: false }
 
+  constructor(props, context) {
+    
+    super(props, context);
+
+    this.horizontal = true;
+
+  }
+
   componentDidMount() {
     this.props.selectable && this._selectable()
   }
@@ -218,22 +226,25 @@ class DayColumn extends React.Component {
           _isSelected
         )
 
-      let { height, top, left, width, xOffset } = style
+      //FIXME having classname in style is misleading
+      let { height, top, left, width, xOffset, className: calculatedClassName } = style
 
-      return (
-        <EventWrapper event={event} key={'evt_' + idx}>
-          <div
-            style={{
+      let divStyle = {
               top: `${top}%`,
               height: `${height}%`,
               [isRtl ? 'right' : 'left']: `${Math.max(left, xOffset)}%`,
               width: `${width}%`,
               ...xStyle,
-            }}
+            }
+
+      return (
+        <EventWrapper event={event} key={'evt_' + idx}>
+          <div
+            style={divStyle}
             title={(typeof label === 'string' ? label + ': ' : '') + title}
             onClick={e => this._select(event, e)}
             onDoubleClick={e => this._doubleClick(event, e)}
-            className={cn('rbc-event', className, {
+            className={calculatedClassName + ' ' + cn('rbc-event', className, {
               'rbc-selected': _isSelected,
               'rbc-event-continues-earlier': continuesPrior,
               'rbc-event-continues-later': continuesAfter,
@@ -241,13 +252,13 @@ class DayColumn extends React.Component {
               'rbc-event-continues-day-after': _continuesAfter,
             })}
           >
-            <div className="rbc-event-label">{label}</div>
             <div className="rbc-event-content">
               {EventComponent ? (
                 <EventComponent event={event} title={title} />
               ) : (
                 title
               )}
+              <div className="rbc-event-label">{label}</div>
             </div>
           </div>
         </EventWrapper>
@@ -256,12 +267,27 @@ class DayColumn extends React.Component {
   }
 
   _slotStyle = (startSlot, endSlot) => {
-    let top = startSlot / this._totalMin * 100
-    let bottom = endSlot / this._totalMin * 100
 
-    return {
-      top: top + '%',
-      height: bottom - top + '%',
+    if (this.horizontal) {
+
+      let left = startSlot / this._totalMin * 100
+      let right = endSlot / this._totalMin * 100
+
+      return {
+        left: left + '%',
+        width: right - left + '%',
+        height: '100%'
+      }
+    }
+    else {
+
+      let top = startSlot / this._totalMin * 100
+      let bottom = endSlot / this._totalMin * 100
+
+      return {
+        top: top + '%',
+        height: bottom - top + '%',
+      }
     }
   }
 
@@ -269,6 +295,7 @@ class DayColumn extends React.Component {
     let node = findDOMNode(this)
     let selector = (this._selector = new Selection(() => findDOMNode(this), {
       longPressThreshold: this.props.longPressThreshold,
+      horizontal: true
     }))
 
     let maybeSelect = box => {
@@ -289,15 +316,22 @@ class DayColumn extends React.Component {
       this.setState(state)
     }
 
-    let selectionState = ({ y }) => {
+    let selectionState = ({ x, y }) => {
       let { step, min, max } = this.props
-      let { top, bottom } = getBoundsForNode(node)
+      let { top, bottom, left, right } = getBoundsForNode(node)
 
       let mins = this._totalMin
 
-      let range = Math.abs(top - bottom)
+      let range, current;
 
-      let current = (y - top) / range
+      if (this.horizontal) {
+        range = Math.abs(left - right)
+        current = (x - left) / range
+      }
+      else {
+        range = Math.abs(top - bottom)
+        current = (y - top) / range
+      }
 
       current = snapToSlot(minToDate(mins * current, min), step)
 

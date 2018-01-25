@@ -95,6 +95,7 @@ class BackgroundCells extends React.Component {
     let node = findDOMNode(this);
     let selector = this._selector = new Selection(this.props.container, {
       longPressThreshold: this.props.longPressThreshold,
+      horizontal: true
     })
 
     let selectorClicksHandler = (point, actionType) => {
