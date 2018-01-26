@@ -183,8 +183,10 @@ export default class TimeGrid extends Component {
     //If not current day, no styling
 
     let date = range[0];
-    //let timeStyle = {};
-    let timeStyle = {left: (-dates.currentTimeOffset(date)) + '%'};
+    let timeStyle = {};
+    if (this.props.follow) {
+      timeStyle = {left: (-dates.currentTimeOffset(date)) + '%'};
+    }
 
     let currentTimeIndicator = <div ref='timeIndicator' />;
     if (dates.isToday(date)) {
@@ -218,20 +220,14 @@ export default class TimeGrid extends Component {
     let { min, max, endAccessor, startAccessor, components } = this.props;
 
     return range.map((date, idx) => {
-      let daysEvents = events;
        
-       /*
-        events.filter(
-
-//FIXME support day view with 2 views
+      let daysEvents = events.filter(
         
-
-
         event => dates.inRange(date,
           get(event, startAccessor),
           get(event, endAccessor), 'day')
       )
-*/
+
       return (
         <DayColumn
           {...this.props }
