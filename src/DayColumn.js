@@ -138,7 +138,6 @@ class DayColumn extends React.Component {
         step={step}
       >
         {this.renderEvents()}
-
         {selecting && (
           <div className="rbc-slot-selection" style={slotStyle}>
             <span>
@@ -175,7 +174,7 @@ class DayColumn extends React.Component {
 
     let EventComponent = eventComponent
 
-    let styledEvents = getStyledEvents({
+    let {styledEvents, maxMultiBookCount} = getStyledEvents({
       events,
       startAccessor,
       endAccessor,
@@ -185,6 +184,13 @@ class DayColumn extends React.Component {
       step,
       timeslots,
     })
+
+    //Set maxMultiBookCount
+//FIXME
+    if (this.props.gotEvents) {
+      this.props.gotEvents({date:this.props.date, 
+        styledEvents, maxMultiBookCount});
+    }
 
     return styledEvents.map(({ event, style }, idx) => {
       let _eventTimeRangeFormat = eventTimeRangeFormat

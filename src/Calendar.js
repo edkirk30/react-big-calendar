@@ -669,6 +669,8 @@ class Calendar extends React.Component {
           ref='view'
           {...props}
           {...formats}
+
+
           messages={messages}
           culture={culture}
           formats={undefined}

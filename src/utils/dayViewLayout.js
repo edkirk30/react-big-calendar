@@ -222,8 +222,16 @@ export default function getStyledEvents ({
   let events = sort(unsortedEvents, { startAccessor, endAccessor })
   let helperArgs = { events, startAccessor, endAccessor, min, showMultiDayTimes, totalMin, step, timeslots }
   let styledEvents = []
-  let idx = 0
 
+  let maxMultiBookCount = 0;
+  for (var eventRecord of events) {
+    //Multi book height
+    if (eventRecord.multiBookCount > maxMultiBookCount) {
+      maxMultiBookCount = eventRecord.multiBookCount;
+    } 
+  } 
+
+  let idx = 0
   // One iteration will cover all connected events.
   while (idx < events.length) {
     let siblings = getSiblings(idx, helperArgs)
@@ -235,12 +243,24 @@ export default function getStyledEvents ({
     // Set styles to top level events.
     [idx, ...siblings].forEach((eventIdx, siblingIdx) => {
       let { top, height } = getYStyles(eventIdx, helperArgs)
+
       //let yAdjustment = height * (nbrOfColumns > 1 ? OVERLAP_MULTIPLIER : 0)
       let left = top;
       top = 0;
+
+//FIXME      
+let unitRatio = 10;
+
       let width = height;
-      height = 80 / events[eventIdx].maxChildDepth
-      let yAdjustment = height * (events[eventIdx].depth - 1)
+
+      //height = 80 / events[eventIdx].maxChildDepth
+      //let yAdjustment = height * (events[eventIdx].depth - 1)
+    
+height = unitRatio * events[eventIdx].heightUnits;
+
+      let yAdjustment = events[eventIdx].offsetUnits * unitRatio; 
+
+      //FIXME move to handler function
 
       //Booking size classes
       let className = "";
@@ -254,9 +274,21 @@ export default function getStyledEvents ({
       if (width < 8) {
         className += 'skinny-event ';
       }
-    
+
+//FIXME need next days event as well.
+
+      //
+      className += events[eventIdx].multiBookingType + ' ';
+
+
+      //Multi book height
+      className += 'multi-book-count-' + events[eventIdx].multiBookCount + ' '; 
+      className += 'multi-book-index-' + events[eventIdx].multiBookIndex + ' '; 
+
       //Booking status classes
-      className += 'status-' + events[eventIdx].workOrderStatus + ' ';
+      //className += 'status-' + events[eventIdx].eventStatus + ' ';
+
+      className += events[eventIdx].extraClassNames;
 
       //FIXME horizontal argument
 
@@ -330,5 +362,5 @@ export default function getStyledEvents ({
     idx += 1
   }
 
-  return styledEvents
+  return {styledEvents, maxMultiBookCount}
 }
