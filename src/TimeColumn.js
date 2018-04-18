@@ -34,6 +34,7 @@ export default class TimeColumn extends Component {
   }
 
   renderTimeSliceGroup(key, isNow, date) {
+
     const { dayWrapperComponent, timeslots, showLabels, step, slotPropGetter, dayPropGetter, timeGutterFormat, culture } = this.props;
 
     return (
@@ -49,6 +50,7 @@ export default class TimeColumn extends Component {
         showLabels={showLabels}
         timeGutterFormat={timeGutterFormat}
         dayWrapperComponent={dayWrapperComponent}
+        disableSlices={this.props.disableSlices}
       />
     )
   }
@@ -64,18 +66,20 @@ export default class TimeColumn extends Component {
     let next = date
     let isNow = false
 
-    for (var i = 0; i < numGroups; i++) {
-      isNow = dates.inRange(
-          now
-        , date
-        , dates.add(next, groupLengthInMinutes - 1, 'minutes')
-        , 'minutes'
-      )
+    if (!this.props.disableSliceGroups) {
+      for (var i = 0; i < numGroups; i++) {
+        isNow = dates.inRange(
+            now
+          , date
+          , dates.add(next, groupLengthInMinutes - 1, 'minutes')
+          , 'minutes'
+        )
 
-      next = dates.add(date, groupLengthInMinutes, 'minutes');
-      renderedSlots.push(this.renderTimeSliceGroup(i, isNow, date))
+        next = dates.add(date, groupLengthInMinutes, 'minutes');
 
-      date = next
+        renderedSlots.push(this.renderTimeSliceGroup(i, isNow, date))
+        date = next
+      }
     }
 
     return (

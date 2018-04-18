@@ -188,7 +188,7 @@ class DayColumn extends React.Component {
     //Set maxMultiBookCount
 //FIXME
     if (this.props.gotEvents) {
-      this.props.gotEvents({date:this.props.date, 
+      this.props.gotEvents({date: this.props.date.toDateString(), 
         styledEvents, maxMultiBookCount});
     }
 

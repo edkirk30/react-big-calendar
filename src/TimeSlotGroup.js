@@ -41,6 +41,11 @@ export default class TimeSlotGroup extends Component {
   }
 
   renderSlices() {
+
+    if (this.props.disableSlices) { 
+      return (null);
+    }    
+
     const ret = []
     const sliceLength = this.props.step
     let sliceValue = this.props.value

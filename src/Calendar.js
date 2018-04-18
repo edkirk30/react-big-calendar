@@ -644,6 +644,7 @@ class Calendar extends React.Component {
     )
 
     let CalToolbar = components.toolbar || Toolbar
+
     const label = View.title(current, { formats, culture, length })
 
     return (
@@ -669,8 +670,6 @@ class Calendar extends React.Component {
           ref='view'
           {...props}
           {...formats}
-
-
           messages={messages}
           culture={culture}
           formats={undefined}

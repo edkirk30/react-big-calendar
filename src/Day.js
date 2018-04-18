@@ -13,11 +13,22 @@ class Day extends React.Component {
 
   render() {
     let { date, ...props } = this.props;
-    let nextDate = dates.add(date, 1, 'day');
-    let range = [dates.startOf(date, 'day'), dates.startOf(nextDate, 'day')];
+
+    let range = [dates.startOf(date, 'day')]
+
+    if (dates.isToday(date)) {
+      range = [...range, dates.startOf(dates.add(date, 1, 'day'), 'day')];
+    }
 
     return (
-      <TimeGrid {...props} range={range} eventOffset={11} />
+      <TimeGrid
+        {...props}
+        range={range}
+        eventOffset={11}
+        disableSlices={true} 
+        offsetCalculation={Day.offsetCalculation} 
+        supportsFollow={Day.supportsFollow}
+        />
     );
   }
 }
@@ -39,5 +50,33 @@ Day.navigate = (date, action)=>{
 Day.title = (date, { formats, culture }) =>
   localizer.format(date, formats.dayHeaderFormat, culture);
 
+Day.timeScaleValues = (date, today=false, follow=false) => {
+
+  let days = today ? 2 : 1;
+  let key = 0;
+  let scale = [];
+
+  for (let i=0; i<days; i++) { 
+    for (let j=0; j<24; j++) {
+      scale.push({label: String(j) + ':00',
+                  key: key++});  
+    }
+  }
+
+  return scale;
+
+} 
+
+Day.offsetCalculation = (date, follow) => {
+
+  if (follow) {
+    return -dates.currentTimeOffset(date) + '%';
+  }
+
+  return 0;
+
+}
+
+Day.supportsFollow = true;
 
 export default Day

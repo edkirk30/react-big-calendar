@@ -248,15 +248,13 @@ export default function getStyledEvents ({
       let left = top;
       top = 0;
 
-//FIXME      
-let unitRatio = 10;
-
       let width = height;
 
       //height = 80 / events[eventIdx].maxChildDepth
       //let yAdjustment = height * (events[eventIdx].depth - 1)
-    
-height = unitRatio * events[eventIdx].heightUnits;
+
+      let unitRatio = 80/events[eventIdx].totalStackUnits;
+      height = unitRatio * events[eventIdx].heightUnits;
 
       let yAdjustment = events[eventIdx].offsetUnits * unitRatio; 
 
@@ -276,7 +274,6 @@ height = unitRatio * events[eventIdx].heightUnits;
       }
 
 //FIXME need next days event as well.
-
       //
       className += events[eventIdx].multiBookingType + ' ';
 

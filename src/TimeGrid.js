@@ -184,9 +184,8 @@ export default class TimeGrid extends Component {
 
     let date = range[0];
     let timeStyle = {};
-    if (this.props.follow) {
-      timeStyle = {left: (-dates.currentTimeOffset(date)) + '%'};
-    }
+
+    timeStyle = {left: this.props.offsetCalculation(date, this.props.follow)};
 
     let currentTimeIndicator = <div ref='timeIndicator' />;
     if (dates.isToday(date)) {
@@ -198,7 +197,7 @@ export default class TimeGrid extends Component {
 
         {this.renderHeader(range, allDayEvents, width)}
 
-        <div ref='content' className='rbc-time-content test' style={timeStyle}>
+        <div ref='content' className='rbc-time-content' style={timeStyle}>
           {currentTimeIndicator}
 
           <TimeColumn
@@ -434,16 +433,15 @@ let horizontal = true;
 
     const timeIndicator = this.refs.timeIndicator;
 
-//FIXME day needs this split in 2
-//    const factor = secondsPassed / secondsGrid;
-const factor = (secondsPassed / secondsGrid)/2;
+    let factor = secondsPassed / secondsGrid;
+    if (this.props.supportsFollow) {
+      factor = factor/2;
+    }
     
     const timeGutter = this._gutters[this._gutters.length - 1];
 
     if (timeGutter && now >= min && now <= max) {
 
-      const pixelHeight = timeGutter.offsetHeight;
-      const offset = Math.floor(factor * pixelHeight);
 
       if (horizontal) {
 
@@ -451,6 +449,9 @@ const factor = (secondsPassed / secondsGrid)/2;
 
       }
       else {
+        const pixelHeight = timeGutter.offsetHeight;
+        const offset = Math.floor(factor * pixelHeight);
+
         timeIndicator.style[rtl ? 'left' : 'right'] = 0;
         timeIndicator.style[rtl ? 'right' : 'left'] = timeGutter.offsetWidth + 'px';
         timeIndicator.style.top = offset + 'px';
