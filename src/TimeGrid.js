@@ -444,7 +444,6 @@ let horizontal = true;
 
 
       if (horizontal) {
-
         timeIndicator.style.left = (factor * 100) + '%';
 
       }

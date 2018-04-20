@@ -29,7 +29,7 @@ class Week extends React.Component {
         eventOffset={15}
         disableSliceGroups={true}
         offsetCalculation={Week.offsetCalculation}
-        supportsFollow={false}
+        supportsFollow={Week.supportsFollow}
         max={dates.endOf(range.slice(-1), 'day')} 
       />
     );
@@ -92,7 +92,7 @@ Week.offsetCalculation = (date, follow) => {
 
 }
 
-Week.supportsFollow = true;
+Week.supportsFollow = false;
 
 
 export default Week

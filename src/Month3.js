@@ -15,9 +15,7 @@ class Month3 extends React.Component {
 
   render() {
     let { date, ...props } = this.props
-    let nextDate = dates.add(date, 3, 'month');
     let range = [...Month3.range(date, this.props),] 
-    //              ...Month3.range(nextDate, this.props)]
 
     return (
       <TimeGrid 
@@ -27,6 +25,7 @@ class Month3 extends React.Component {
         disableSliceGroups={true} 
         offsetCalculation={Month3.offsetCalculation} 
         supportsFollow={false}
+        max={dates.endOf(range.slice(-1), 'day')} 
       />
     );
   }
@@ -52,16 +51,12 @@ Month3.range = (date, { culture }) => {
 
   let firstOfWeek = localizer.startOfWeek(culture)
 
-  let start = dates.startOf(date, 'month', firstOfWeek)
-  let end = dates.endOf(dates.add(date, 2, 'month'), 'month', firstOfWeek)
+  let start = dates.startOf(date, 'day', firstOfWeek)
+  let end = dates.endOf(dates.add(date, 3, 'month'), 'day', firstOfWeek)
 
   return dates.range(start, end)
 }
 
-//FIXME only month
-Month3.title = (date, { formats, culture }) =>
-  localizer.format(date, formats.monthHeaderFormat, culture);
-/*
 Month3.title = (date, { formats, culture }) => {
 
   let [start, ...rest] = Month3.range(date, { culture })
@@ -71,21 +66,18 @@ Month3.title = (date, { formats, culture }) => {
     culture
   );
 }
-*/
 
-//FIXME divisions ignored
-Month3.timeScaleValues = (date, divisions) => {
+Month3.timeScaleValues = (date) => {
 
   let scale = [];
   let key = 0;
 
-  //FIXME hardcoded 
-  for (let i=0; i<14; i++) {
+  for (let i=0; i<3; i++) {
 
-    let scaleDate = dates.add(date, i, 'day');
+    let scaleDate = dates.add(date, i, 'month');
 
     scale.push({
-      label: moment(scaleDate).format("ddd Do"),
+      label: moment(scaleDate).format("MMM"),
       key: key++,
     });
 
