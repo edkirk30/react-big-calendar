@@ -158,6 +158,9 @@ class BackgroundCells extends React.Component {
     selector
       .on('doubleClick', point => selectorClicksHandler(point, 'doubleClick'))
 
+//    selector
+//      .on('hover', point => {debugger;})
+
     selector
       .on('select', () => {
         this._selectSlot({ ...this.state, action: 'select' })

@@ -277,7 +277,6 @@ export default function getStyledEvents ({
       //
       className += events[eventIdx].multiBookingType + ' ';
 
-
       //Multi book height
       className += 'multi-book-count-' + events[eventIdx].multiBookCount + ' '; 
       className += 'multi-book-index-' + events[eventIdx].multiBookIndex + ' '; 

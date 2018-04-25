@@ -59,6 +59,8 @@ class DayColumn extends React.Component {
     onSelecting: PropTypes.func,
     onSelectSlot: PropTypes.func.isRequired,
     onSelectEvent: PropTypes.func.isRequired,
+    onMouseEnterEvent: PropTypes.func.isRequired,
+    onMouseLeaveEvent: PropTypes.func.isRequired,
     onDoubleClickEvent: PropTypes.func.isRequired,
 
     className: PropTypes.string,
@@ -246,11 +248,13 @@ class DayColumn extends React.Component {
       return (
         <EventWrapper event={event} key={'evt_' + idx}>
           <div
+            onMouseEnter={(e) => {this._mouseEnter(event, e);}}
+            onMouseLeave={(e) => {this._mouseLeave(event, e);}}
             style={divStyle}
             title={(typeof label === 'string' ? label + ': ' : '') + title}
             onClick={e => this._select(event, e)}
             onDoubleClick={e => this._doubleClick(event, e)}
-            className={calculatedClassName + ' ' + cn('rbc-event', className, {
+            className={calculatedClassName + ' ' + cn('rbc-event test-daycol', className, {
               'rbc-selected': _isSelected,
               'rbc-event-continues-earlier': continuesPrior,
               'rbc-event-continues-later': continuesAfter,
@@ -260,17 +264,17 @@ class DayColumn extends React.Component {
           >
             <div className="rbc-event-content">
               {EventComponent ? (
-                <EventComponent event={event} title={title} />
+                <EventComponent event={event} title={title} label={label} />
               ) : (
                 title
               )}
-              <div className="rbc-event-label">{label}</div>
             </div>
           </div>
         </EventWrapper>
       )
     })
   }
+
 
   _slotStyle = (startSlot, endSlot) => {
 
@@ -418,6 +422,15 @@ class DayColumn extends React.Component {
   _doubleClick = (...args) => {
     notify(this.props.onDoubleClickEvent, args)
   }
+
+  _mouseEnter = (...args) => {
+    notify(this.props.onMouseEnterEvent, args)
+  }
+
+  _mouseLeave = (...args) => {
+    notify(this.props.onMouseLeaveEvent, args)
+  }
+
 }
 
 function minToDate(min, date) {
