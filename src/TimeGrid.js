@@ -132,6 +132,7 @@ export default class TimeGrid extends Component {
   }
 
   handleSelectAllDaySlot = (slots, slotInfo) => {
+
     const { onSelectSlot } = this.props;
     notify(onSelectSlot, {
       slots,
@@ -161,10 +162,13 @@ export default class TimeGrid extends Component {
       , rangeEvents = [];
 
     events.forEach(event => {
+
       if (inRange(event, start, end, this.props)) {
         let eStart = get(event, startAccessor)
           , eEnd = get(event, endAccessor);
 
+//FIXME add as option
+        /*
         if (get(event, allDayAccessor)
           || (dates.isJustDate(eStart) && dates.isJustDate(eEnd))
           || (!showMultiDayTimes && !dates.eq(eStart, eEnd, 'day'))) {
@@ -172,6 +176,8 @@ export default class TimeGrid extends Component {
         } else {
           rangeEvents.push(event)
         }
+        */
+        rangeEvents.push(event);
       }
     })
 
@@ -234,11 +240,13 @@ export default class TimeGrid extends Component {
           eventComponent={components.event}
           eventWrapperComponent={components.eventWrapper}
           dayWrapperComponent={components.dayWrapper}
+          dayColumnWrapperComponent={components.dayColumnWrapper}
           className={cn({ 'rbc-now': dates.eq(date, today, 'day') })}
           style={segStyle(1, this.slots)}
           key={idx}
           date={date}
           events={daysEvents}
+        test={"test"}
         />
       )
     })

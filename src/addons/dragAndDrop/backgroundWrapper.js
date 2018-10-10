@@ -1,7 +1,9 @@
 import PropTypes from 'prop-types';
 import React from 'react'
+import ReactDOM from "react-dom";
 import { DropTarget } from 'react-dnd'
 import cn from 'classnames';
+import moment from 'moment';
 
 import { accessor } from '../../utils/propTypes';
 import { accessor as get } from '../../utils/accessors';
@@ -73,6 +75,7 @@ class DraggableBackgroundWrapper extends React.Component {
   // };
 
   render() {
+
     const { connectDropTarget, children, type, isOver } = this.props;
     const BackgroundWrapper = BigCalendar.components[type];
 
@@ -92,6 +95,8 @@ class DraggableBackgroundWrapper extends React.Component {
 DraggableBackgroundWrapper.propTypes = propTypes;
 
 DraggableBackgroundWrapper.contextTypes = {
+  step: PropTypes.number,
+  matchOriginalTimes: PropTypes.bool,
   onEventDrop: PropTypes.func,
   dragDropManager: PropTypes.object,
   startAccessor: accessor,
@@ -99,6 +104,7 @@ DraggableBackgroundWrapper.contextTypes = {
 }
 
 function createWrapper(type) {
+
   function collectTarget(connect, monitor) {
     return {
       type,
@@ -107,19 +113,77 @@ function createWrapper(type) {
     };
   }
 
-
   const dropTarget = {
-    drop(_, monitor, { props, context }) {
-      const event = monitor.getItem();
-      const { value } = props
-      const { onEventDrop, startAccessor, endAccessor } = context
+
+      drop(props, monitor, component) {
+
+      const {dragProps, dragComponent} = monitor.getItem();
+      const event = dragProps.event;
+      const { value } = component.props
+      const { onEventDrop, startAccessor, endAccessor, step, matchOriginalTimes } = component.context;
       const start = get(event, startAccessor);
       const end = get(event, endAccessor);
 
-      onEventDrop({
-        event,
-        ...getEventTimes(start, end, value, type)
-      })
+      if (component.props.type === 'dayColumnWrapper') {
+
+        const delta = monitor.getDifferenceFromInitialOffset();
+
+        //FIXME don't pass component just this
+        const previousBound = ReactDOM.findDOMNode(dragComponent).getBoundingClientRect();
+        const dayColumnBound = ReactDOM.findDOMNode(component).getBoundingClientRect();
+
+        const secondsPerPixel = 86400/dayColumnBound.width;
+
+        const newX = previousBound.x + delta.x;
+
+        const relativeX = newX - dayColumnBound.x;
+
+        const rawStartSeconds = moment.duration(relativeX * secondsPerPixel, 'seconds');
+
+        const duration = dates.diff(start, end)
+
+        let newStart;
+
+        if (!matchOriginalTimes) {
+         
+          const stepMinutes = step*60;
+
+          //Round newStart to step
+          const roundedStart = moment.duration(
+            Math.round(rawStartSeconds.asSeconds()/stepMinutes) * 
+              stepMinutes, 'seconds');
+
+          newStart = moment(value).add(roundedStart);
+            
+        }
+        else {
+
+          const timeFormat = 'H:mm:ss';
+            
+          //Get time and duration from existing event 
+          const time = moment.duration(moment(start).format(timeFormat), timeFormat)
+
+          const calculatedStart = moment(value).add(rawStartSeconds);
+
+          newStart = moment(calculatedStart.startOf('day')).add(time);
+
+        }
+
+        const newEnd = moment(newStart).add(duration);
+
+        onEventDrop({
+          event,
+          start: newStart,
+          end: newEnd,
+        });
+          
+      }
+      else {
+        onEventDrop({
+          event,
+          ...getEventTimes(start, end, value, type)
+        })
+      }
     }
   };
 
@@ -128,3 +192,4 @@ function createWrapper(type) {
 
 export const DateCellWrapper = createWrapper('dateCellWrapper');
 export const DayWrapper = createWrapper('dayWrapper');
+export const DayColumnWrapper = createWrapper('dayColumnWrapper');

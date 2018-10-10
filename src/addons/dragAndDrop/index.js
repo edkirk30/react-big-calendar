@@ -5,14 +5,13 @@ import cn from 'classnames';
 
 import { accessor } from '../../utils/propTypes';
 import DraggableEventWrapper from './DraggableEventWrapper'
-import { DayWrapper, DateCellWrapper } from './backgroundWrapper'
+import { DayWrapper, DayColumnWrapper, DateCellWrapper } from './backgroundWrapper'
 
 let html5Backend;
 
 try {
   html5Backend = require('react-dnd-html5-backend')
 } catch (err) { /* optional dep missing */}
-
 
 export default function withDragAndDrop(Calendar, {
   backend = html5Backend
@@ -25,6 +24,8 @@ export default function withDragAndDrop(Calendar, {
     }
     getChildContext () {
       return {
+        step: this.props.steps[this.props.view],
+        matchOriginalTimes: this.props.matchOriginalTimes[this.props.view],
         onEventDrop: this.props.onEventDrop,
         startAccessor: this.props.startAccessor,
         endAccessor: this.props.endAccessor
@@ -74,7 +75,8 @@ export default function withDragAndDrop(Calendar, {
         ...components,
         eventWrapper: DraggableEventWrapper,
         dateCellWrapper: DateCellWrapper,
-        dayWrapper: DayWrapper
+        dayWrapper: DayWrapper,
+        dayColumnWrapper: DayColumnWrapper,
       }
 
       return <Calendar {...props} />
@@ -82,6 +84,7 @@ export default function withDragAndDrop(Calendar, {
   }
 
   DragAndDropCalendar.propTypes = {
+    step: PropTypes.number,
     onEventDrop: PropTypes.func.isRequired,
     startAccessor: accessor,
     endAccessor: accessor
@@ -97,6 +100,8 @@ export default function withDragAndDrop(Calendar, {
   }
 
   DragAndDropCalendar.childContextTypes = {
+    step: PropTypes.number,
+    matchOriginalTimes: PropTypes.bool,
     onEventDrop: PropTypes.func,
     startAccessor: accessor,
     endAccessor: accessor

@@ -22,7 +22,7 @@ class Month extends React.Component {
         {...props}
         range={range}
         eventOffset={15}
-        disableSliceGroups={true} 
+        disableSliceGroups={true}
         offsetCalculation={Month.offsetCalculation} 
         supportsFollow={false}
         max={dates.endOf(range.slice(-1), 'day')} 
@@ -98,6 +98,7 @@ Month.timeScaleValues = (date) => {
     scale.push({
       label: moment(scaleDate).format("Do"),
       key: key++,
+      date: scaleDate
     });
 
   }

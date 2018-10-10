@@ -28,6 +28,8 @@ class Week extends React.Component {
         range={range}
         eventOffset={15}
         disableSliceGroups={true}
+        disableSlices={false}
+        step={this.props.weekStep}
         offsetCalculation={Week.offsetCalculation}
         supportsFollow={Week.supportsFollow}
         max={dates.endOf(range.slice(-1), 'day')} 
@@ -78,6 +80,7 @@ Week.timeScaleValues = (date) => {
     scale.push({
       label: moment(scaleDate).format("ddd Do"),
       key: key++,
+      date: scaleDate
     });
 
   }

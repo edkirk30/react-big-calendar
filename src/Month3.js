@@ -47,8 +47,6 @@ Month3.navigate = (date, action) => {
 
 Month3.range = (date, { culture }) => {
 
-  //FIXME
-
   let firstOfWeek = localizer.startOfWeek(culture)
 
   let start = dates.startOf(date, 'day', firstOfWeek)
@@ -79,6 +77,7 @@ Month3.timeScaleValues = (date) => {
     scale.push({
       label: moment(scaleDate).format("MMM"),
       key: key++,
+      date: scaleDate
     });
 
   }

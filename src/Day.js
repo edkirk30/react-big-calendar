@@ -25,7 +25,7 @@ class Day extends React.Component {
         {...props}
         range={range}
         eventOffset={11}
-        disableSlices={true} 
+        disableSlices={true}
         offsetCalculation={Day.offsetCalculation} 
         supportsFollow={Day.supportsFollow}
         />

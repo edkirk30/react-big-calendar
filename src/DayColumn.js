@@ -68,6 +68,7 @@ class DayColumn extends React.Component {
     eventPropGetter: PropTypes.func,
     dayPropGetter: PropTypes.func,
     dayWrapperComponent: elementType,
+    dayColumnWrapperComponent: elementType,
     eventComponent: elementType,
     eventWrapperComponent: elementType.isRequired,
   }
@@ -245,16 +246,19 @@ class DayColumn extends React.Component {
               ...xStyle,
             }
 
+      if (this.props.supportsFollow && this.props.follow && (start < Date.now())) {
+        className += ' start-hidden';
+      } 
+
       return (
         <EventWrapper event={event} key={'evt_' + idx}>
           <div
             onMouseEnter={(e) => {this._mouseEnter(event, e);}}
             onMouseLeave={(e) => {this._mouseLeave(event, e);}}
             style={divStyle}
-            title={(typeof label === 'string' ? label + ': ' : '') + title}
             onClick={e => this._select(event, e)}
             onDoubleClick={e => this._doubleClick(event, e)}
-            className={calculatedClassName + ' ' + cn('rbc-event test-daycol', className, {
+            className={calculatedClassName + ' ' + cn('rbc-event', className, {
               'rbc-selected': _isSelected,
               'rbc-event-continues-earlier': continuesPrior,
               'rbc-event-continues-later': continuesAfter,
@@ -399,6 +403,7 @@ class DayColumn extends React.Component {
   }
 
   _selectSlot = ({ startDate, endDate, action }) => {
+
     let current = startDate,
       slots = []
 

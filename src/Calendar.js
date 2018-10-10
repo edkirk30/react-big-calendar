@@ -515,6 +515,7 @@ class Calendar extends React.Component {
       event: elementType,
       eventWrapper: elementType,
       dayWrapper: elementType,
+      dayColumnWrapper: elementType,
       dateCellWrapper: elementType,
 
       toolbar: elementType,
@@ -627,6 +628,10 @@ class Calendar extends React.Component {
       , length
       , ...props } = this.props;
 
+    let step = this.props.steps && this.props.steps[this.props.view] !== undefined ? 
+      this.props.steps[this.props.view] : 
+      this.props.step;
+
     formats = defaultFormats(formats)
     messages = message(messages)
 
@@ -639,7 +644,8 @@ class Calendar extends React.Component {
       {
         eventWrapper: EventWrapper,
         dayWrapper: BackgroundWrapper,
-        dateCellWrapper: BackgroundWrapper
+        dateCellWrapper: BackgroundWrapper,
+        dayColumnWrapper: BackgroundWrapper,
       }
     )
 
@@ -670,6 +676,7 @@ class Calendar extends React.Component {
           ref='view'
           {...props}
           {...formats}
+          step={step}
           messages={messages}
           culture={culture}
           formats={undefined}

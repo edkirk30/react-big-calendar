@@ -23,6 +23,7 @@ export default class TimeColumn extends Component {
     slotPropGetter: PropTypes.func,
     dayPropGetter: PropTypes.func,
     dayWrapperComponent: elementType,
+    dayColumnWrapperComponent: elementType,
   }
   static defaultProps = {
     step: 30,
@@ -82,7 +83,9 @@ export default class TimeColumn extends Component {
       }
     }
 
-    return (
+    const Wrapper = this.props.dayColumnWrapperComponent;
+
+    let content = (
       <div
         className={cn(className, 'rbc-time-column')}
         style={style}
@@ -90,6 +93,17 @@ export default class TimeColumn extends Component {
         {renderedSlots}
         {children}
       </div>
-    )
+    ) 
+
+    if (Wrapper) {
+      return (
+        <Wrapper value={min}>
+          {content}
+        </Wrapper>   
+      )
+    }
+    else {
+      return content;
+    }
   }
 }

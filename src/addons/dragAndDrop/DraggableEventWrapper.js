@@ -8,12 +8,20 @@ import BigCalendar from '../../index';
 /* drag sources */
 
 let eventSource = {
-  beginDrag(props) {
-    return props.event;
+  beginDrag(props, monitor, component) {
+
+    return {dragProps: props, monitor, dragComponent: component};
+
+    //return props.event;
+  },
+  endDrag(props, monitor, component) {
+    let mousePosition = monitor.getClientOffset();
   }
+
 }
 
 function collectSource(connect, monitor) {
+
   return {
     connectDragSource: connect.dragSource(),
     isDragging: monitor.isDragging()
@@ -28,9 +36,9 @@ const propTypes = {
 
 class DraggableEventWrapper extends React.Component {
   render() {
+
     let { connectDragSource, isDragging, children, event } = this.props;
     let EventWrapper = BigCalendar.components.eventWrapper;
-
     children = React.cloneElement(children, {
       className: cn(
         children.props.className,

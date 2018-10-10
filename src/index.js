@@ -17,6 +17,7 @@ Object.assign(Calendar, {
   components: {
     eventWrapper: EventWrapper,
     dayWrapper: BackgroundWrapper,
+    dayColumnWrapper: BackgroundWrapper,
     dateCellWrapper: BackgroundWrapper
   }
 })
