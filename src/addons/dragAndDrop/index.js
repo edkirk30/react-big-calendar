@@ -73,7 +73,8 @@ export default function withDragAndDrop(Calendar, {
 
       props.components = {
         ...components,
-        eventWrapper: DraggableEventWrapper,
+        eventWrapper: this.props.components.eventWrapper ?
+          this.props.components.eventWrapper : DraggableEventWrapper,
         dateCellWrapper: DateCellWrapper,
         dayWrapper: DayWrapper,
         dayColumnWrapper: DayColumnWrapper,
